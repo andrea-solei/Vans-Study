@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vans Nostalgia Study</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    .message {
+      text-align: center;
+      color: #444;
+      font-size: 16px;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 4px solid #ddd;
+      border-top-color: #555;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="message">
+    <div class="spinner"></div>
+    <p>Loading your survey, please wait...</p>
+  </div>
+
+  <script>
+    // ── CONFIGURATION ──────────────────────────────────────────────
+    // Replace the two URLs below with your actual Jisc survey links
+    var SURVEY_A = "PASTE_SURVEY_A_URL_HERE";  // Nostalgic condition
+    var SURVEY_B = "PASTE_SURVEY_B_URL_HERE";  // Non-nostalgic condition
+
+    // ── STICKY RANDOMISATION ───────────────────────────────────────
+    // If the participant has already been assigned, send them to the
+    // same survey again (prevents double-exposure on repeat visits).
+    var stored = null;
+    try { stored = localStorage.getItem("vans_study_condition"); } catch(e) {}
+
+    var destination;
+    if (stored === "A") {
+      destination = SURVEY_A;
+    } else if (stored === "B") {
+      destination = SURVEY_B;
+    } else {
+      // First visit — assign randomly 50/50
+      var condition = Math.random() < 0.5 ? "A" : "B";
+      try { localStorage.setItem("vans_study_condition", condition); } catch(e) {}
+      destination = condition === "A" ? SURVEY_A : SURVEY_B;
+    }
+
+    // ── REDIRECT ───────────────────────────────────────────────────
+    window.location.replace(destination);
+  </script>
+</body>
+</html>
